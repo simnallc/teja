@@ -13,26 +13,21 @@ pipeline {
     stages {
         stage('SCM checkout') {
             steps {
-                script {
                     git 'https://github.com/simnallc/teja.git'
-                }
+                
             }
         }
 
         stage('Building image') {
             steps {
-                script {
                     sh "docker build -t tejaswinivds24/app:$BUILD_NUMBER ."
                     sh "echo $registryCredential_PSW | docker login -u $registryCredential_USR --password-stdin"
-                }
             }
         }
 
         stage('Push Image') {
             steps {
-                script {
                     sh "docker push tejaswinivds24/app:$BUILD_NUMBER"
-                }
             }
         }
     }
