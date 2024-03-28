@@ -1,2 +1,0 @@
-# teja
-creating repository
