@@ -9,15 +9,15 @@ pipeline {
     environment {
         registry = "tejaswinivds24/app"
         registryCredential = credentials('docker')
+        imageName = "${registry}:${BUILD_NUMBER}"
+        echo "imageName: ${imageName}"
     }
 
     stages {
         stage('Building image') {
             steps {
                 script {
-                    echo "Registry: ${registry}"
-                    echo "build: ${BUILD_NUMBER}"
-                    dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
+                    dockerImage = docker.build(imageName)
                 }
             }
         }
