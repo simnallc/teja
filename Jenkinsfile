@@ -16,6 +16,7 @@ pipeline {
             steps {
                 script {
                     echo "Registry: ${registry}"
+                    echo "build: ${BUILD_NUMBER}"
                     dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
                 }
             }
