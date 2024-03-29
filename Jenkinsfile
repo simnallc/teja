@@ -10,14 +10,13 @@ pipeline {
         registry = "tejaswinivds24/app"
         registryCredential = credentials('docker')
         imageName = "${registry}:${BUILD_NUMBER}"
-        
     }
 
     stages {
         stage('Building image') {
             steps {
                 script {
-                    echo "imageName: ${imageName}"
+                    echo "Building Docker image: ${imageName}"
                     dockerImage = docker.build(imageName)
                 }
             }
@@ -29,6 +28,17 @@ pipeline {
                     docker.withRegistry('', registryCredential) {
                         dockerImage.push()
                     }
+                }
+            }
+        }
+        
+        stage('Check Image Status') {
+            steps {
+                script {
+                    def imageInfo = dockerImage.inspector().getImageInfo()
+                    echo "Image ID: ${imageInfo.getId()}"
+                    echo "Image Name: ${imageInfo.getRepoTags()}"
+                    // You can access more metadata about the image using other methods of imageInfo
                 }
             }
         }
