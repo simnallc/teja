@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         registry = "tejaswinivds24/app"
-        registryCredential = credentials('docker')        
+        registryCredential = credentials('docker')
     }
 
     stages {
@@ -23,7 +23,7 @@ pipeline {
         stage('Deploy Image') {
             steps {
                 script {
-                    docker.withRegistry('', registryCredential_PSW) {
+                    docker.withRegistry('', registryCredential) {
                         dockerImage.push()
                     }
                 }
