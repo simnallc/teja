@@ -7,38 +7,29 @@ pipeline {
     }
 
     environment {
-        registry = "tejaswinivds24/app"
         registryCredential = credentials('docker')
-        imageName = "${registry}:${BUILD_NUMBER}"
     }
 
     stages {
-        stage('Building image') {
+        stage('Build') {
             steps {
                 script {
-                    echo "Building Docker image: ${imageName}"
-                    dockerImage = docker.build(imageName)
+                    sh "docker build -t tejaswinivds24/image:latest ."
+                }
+            }
+        }
+        stage('Login to Docker Hub') {
+            steps {
+                script {
+                    sh "echo $registryCredential_PSW | docker login -u $registryCredential_USR --password-stdin"
                 }
             }
         }
 
-        stage('Deploy Image') {
+        stage('Push Image') {
             steps {
                 script {
-                    docker.withRegistry('', registryCredential) {
-                        dockerImage.push()
-                    }
-                }
-            }
-        }
-        
-        stage('Check Image Status') {
-            steps {
-                script {
-                    def imageInfo = dockerImage.inspector().getImageInfo()
-                    echo "Image ID: ${imageInfo.getId()}"
-                    echo "Image Name: ${imageInfo.getRepoTags()}"
-                    // You can access more metadata about the image using other methods of imageInfo
+                    sh "docker push tejaswinivds24/image:latest"
                 }
             }
         }
